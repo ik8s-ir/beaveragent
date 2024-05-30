@@ -12,5 +12,6 @@ func main() {
 	v1alpha1 := router.Group("/v1alpha1")
 
 	v1alpha1.POST("/ovs", v1alpha1Controller.PostOvsBridge)
+	v1alpha1.DELETE("/ovs/:bridge", v1alpha1Controller.DeleteOvsBridge)
 	router.Run("0.0.0.0:8000")
 }

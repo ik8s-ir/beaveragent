@@ -1,7 +1,6 @@
 package v1alpha1Controller
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,11 +9,27 @@ import (
 )
 
 func PostOvsBridge(ctx *gin.Context) {
-	var body types.TovsBridge
+	var body types.VswitchPostBody
 	if err := ctx.BindJSON(&body); err != nil {
 		return
 	}
-	r, err := ovsagent.CreateDistrubutedSwitch(body.Bridge)
+	r, err := ovsagent.CreateDistrubutedSwitch(body.Bridge,body.Topology)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": r,
+		})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"message": r,
+		})
+	}
+}
+
+func DeleteOvsBridge(ctx *gin.Context) {
+	bridge:=ctx.Param("bridge")
+	r, err := ovsagent.DeleteDistrubutedSwitch(bridge)
 	if err != nil {
 		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
