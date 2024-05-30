@@ -14,7 +14,16 @@ func PostOvsBridge(ctx *gin.Context) {
 	if err := ctx.BindJSON(&body); err != nil {
 		return
 	}
-	log.Println(body.Bridge)
-	ovsagent.CreateDistrubutedSwitch(body.Bridge)
-	ctx.IndentedJSON(http.StatusOK, body)
+	r, err := ovsagent.CreateDistrubutedSwitch(body.Bridge)
+	if err != nil {
+		ctx.IndentedJSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": r,
+		})
+	} else {
+		ctx.IndentedJSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"message": r,
+		})
+	}
 }
