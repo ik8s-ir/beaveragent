@@ -42,6 +42,6 @@ func ovsvsctl(params ...string) ([]byte, error) {
 }
 
 func DeleteDistrubutedSwitch(bridge string) (string, error) {
-	o,e:=ovsvsctl("del-br","bridge")
+	o,e:=ovsvsctl("del-br",bridge)
 	return string(o),e
 }
