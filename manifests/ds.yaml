@@ -12,28 +12,18 @@ spec:
       labels:
         name: ik8s-beaveragent
     spec:
-      tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      - key: node-role.kubernetes.io/storage
-        effect: NoSchedule
-      - key: node-role.kubernetes.io/storage-node
-        effect: NoSchedule
-      hostNetwork: true
-      hostPID: true
-      hostIPC: true
       containers:
-      - name: vswitch
-        # imagePullPolicy: Always
-        image: dr.ik8s.ir/beaveragent:0.1.0-alpha1
+      - image: dr.ik8s.ir/beaveragent
+        imagePullPolicy: Always
+        name: vswitch
+        resources: {}
         securityContext:
-          privileged: true
           capabilities:
-            add: 
+            add:
             - NET_ADMIN
             - SYS_MODULE
             - SYS_NICE
- 
+          privileged: true
         volumeMounts:
         - mountPath: /host/var/run/openvswitch
           name: nodeovsrun
@@ -41,13 +31,23 @@ spec:
           name: nodeovslib
         - mountPath: /lib/modules
           name: kernel-modules
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/storage
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/storage-node
       volumes:
-      - name: nodeovsrun
-        hostPath:
+      - hostPath:
           path: /var/run/openvswitch
-      - name: nodeovslib
-        hostPath:
+          type: ""
+        name: nodeovsrun
+      - hostPath:
           path: /var/lib/openvswitch
-      - name: kernel-modules
-        hostPath:
+          type: ""
+        name: nodeovslib
+      - hostPath:
           path: /lib/modules
+          type: ""
+        name: kernel-modules
