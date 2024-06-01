@@ -6,16 +6,16 @@ metadata:
 spec:
   selector:
     matchLabels:
-      name: ik8s-beaveragent
+      name: beaveragent
   template:
     metadata:
       labels:
-        name: ik8s-beaveragent
+        name: beaveragent
     spec:
       containers:
       - image: dr.ik8s.ir/beaveragent
         imagePullPolicy: Always
-        name: vswitch
+        name: beaveragent
         resources: {}
         securityContext:
           capabilities:
@@ -51,3 +51,15 @@ spec:
           path: /lib/modules
           type: ""
         name: kernel-modules
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beaveragent-headless
+spec:
+  selector:
+    app: beaveragent
+  clusterIP: None
+  ports:
+    port: 8000
+    targetPort: 8000
