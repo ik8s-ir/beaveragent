@@ -17,6 +17,11 @@ spec:
         imagePullPolicy: Always
         name: beaveragent
         resources: {}
+        env:
+        - name: DEFAULT_OVS_BRIDGE
+          value: ext
+        - name: NODE_NIC
+          value: eno33559296
         securityContext:
           capabilities:
             add:
@@ -31,6 +36,9 @@ spec:
           name: nodeovslib
         - mountPath: /lib/modules
           name: kernel-modules
+      hostIPC: true
+      hostNetwork: true
+      hostPID: true
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master
@@ -56,10 +64,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: beaveragent-headless
+  namespace: ik8s-system
 spec:
   selector:
     app: beaveragent
   clusterIP: None
   ports:
-    port: 8000
-    targetPort: 8000
+    - port: 8000
+      targetPort: 8000
