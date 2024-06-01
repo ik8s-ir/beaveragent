@@ -59,16 +59,3 @@ spec:
           path: /lib/modules
           type: ""
         name: kernel-modules
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: beaveragent-headless
-  namespace: ik8s-system
-spec:
-  selector:
-    app: beaveragent
-  clusterIP: None
-  ports:
-    - port: 8000
-      targetPort: 8000
