@@ -2,20 +2,21 @@ package ovsagent
 
 import (
 	"log"
-	"github.com/ik8s-ir/beaveragent/pkg/types"
-	"strconv"
 	"os/exec"
+	"strconv"
+
+	"github.com/ik8s-ir/beaveragent/pkg/types"
 )
 
 func CreateDistrubutedSwitch(bridge string, topology []types.MeshTopology) (string, error) {
 	output, stdErr := createOVSBridge(bridge)
-	if stdErr !=nil {
+	if stdErr != nil {
 		return string(output), stdErr
 	}
-	for index, item := range topology {
-		o,e:=addVXLANtoBridge(bridge,index,item.NodeIP,item.VNI)
-		if e!=nil {
-			log.Printf("error on vxlan %v",o)
+	for _, item := range topology {
+		o, e := addVXLANtoBridge(bridge, int(item.VNI), item.NodeIP, item.VNI)
+		if e != nil {
+			log.Printf("error on vxlan %v", o)
 		}
 	}
 	return string(output), stdErr
@@ -35,13 +36,13 @@ func ovsvsctl(params ...string) ([]byte, error) {
 	baseArgs := []string{"--db=unix:/host/var/run/openvswitch/db.sock"}
 	args := append(baseArgs, params...)
 
-	command := exec.Command("ovs-vsctl",args...)
-	log.Printf("Running: %s \n",command.String())
+	command := exec.Command("ovs-vsctl", args...)
+	log.Printf("Running: %s \n", command.String())
 
 	return command.CombinedOutput()
 }
 
 func DeleteDistrubutedSwitch(bridge string) (string, error) {
-	o,e:=ovsvsctl("del-br",bridge)
-	return string(o),e
+	o, e := ovsvsctl("del-br", bridge)
+	return string(o), e
 }
