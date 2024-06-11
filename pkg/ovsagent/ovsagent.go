@@ -33,10 +33,10 @@ func addVXLANtoBridge(bridge string, vxlanIndex int, remoteIP string, vni int32)
 }
 
 func ovsvsctl(params ...string) ([]byte, error) {
-	baseArgs := []string{"--db=unix:/host/var/run/openvswitch/db.sock"}
-	args := append(baseArgs, params...)
+	// baseArgs := []string{"--db=unix:/host/var/run/openvswitch/db.sock"}
+	// args := append(baseArgs, params...)
 
-	command := exec.Command("ovs-vsctl", args...)
+	command := exec.Command("ovs-vsctl", params...)
 	log.Printf("Running: %s \n", command.String())
 
 	return command.CombinedOutput()

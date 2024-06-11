@@ -30,9 +30,9 @@ spec:
             - SYS_NICE
           privileged: true
         volumeMounts:
-        - mountPath: /host/var/run/openvswitch
+        - mountPath: /var/run/openvswitch
           name: nodeovsrun
-        - mountPath: /host/var/lib/openvswitch
+        - mountPath: /etc/openvswitch
           name: nodeovslib
         - mountPath: /lib/modules
           name: kernel-modules
